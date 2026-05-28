@@ -3,7 +3,7 @@
 
 ## Overview
 
-Each task builds on the previous one. Read `_NEXT.md` at the start of each task — it describes the current state of the app and exactly what to build next.
+Each task builds on the previous one. Read `NEXT.md` at the start of each task — it describes the current state of the app and exactly what to build next.
 
 All tasks use the same pattern: update `state`, call `saveState()`, call `render()`.
 

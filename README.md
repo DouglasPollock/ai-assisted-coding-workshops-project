@@ -47,7 +47,7 @@ No `npm install`, no bundler, no Live Server needed. The app runs as a Chrome Ex
 | `options.html` | Settings page — Anthropic API key input |
 | `options.js` | Settings logic — stubs for Task 5 |
 | `icons/` | Extension icons (16, 48, 128 px) |
-| `_NEXT.md` | **Read this first** — tells you what to build on this branch |
+| `NEXT.md` | **Read this first** — tells you what to build on this branch |
 | `TASKS.md` | Full description of all 5 workshop tasks |
 | `CONVENTIONS.md` | Code conventions + working-with-AI tips |
 | `PROMPTS.md` | Prompt library (filled in during the workshop) |
@@ -88,7 +88,7 @@ Each task has a reference implementation on a dedicated branch:
 
 ```bash
 git checkout main          # start here
-cat _NEXT.md               # read the brief
+cat NEXT.md                # read the brief
 
 git checkout -b my-task-1  # your working branch
 # … code with Copilot …
@@ -99,7 +99,7 @@ git checkout task-1-complete
 # Read, learn, then move on
 
 git checkout -b my-task-2
-cat _NEXT.md               # new brief
+cat NEXT.md                # new brief
 ```
 
 ---
