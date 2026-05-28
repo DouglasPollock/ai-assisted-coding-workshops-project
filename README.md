@@ -1,6 +1,6 @@
-# Scrum Poker — Workshop Template
+# Kainos TODO — Workshop Template
 
-Training template for an AI-Assisted Coding workshop. The project grows alongside the theory across 4 tasks, each adding a new layer to the application.
+Training template for an AI-Assisted Coding workshop. The project is a **Chrome Extension TODO app** that grows across 5 tasks, each adding a new layer while practising AI-assisted coding with GitHub Copilot and Claude.
 
 ---
 
@@ -9,13 +9,12 @@ Training template for an AI-Assisted Coding workshop. The project grows alongsid
 Install **before** the workshop:
 
 1. **VS Code** — https://code.visualstudio.com/
-2. **Live Server extension** in VS Code  
-   (Ctrl+Shift+X → search "Live Server" → install by Ritwick Dey)
-3. **GitHub Copilot** — subscription or trial required  
+2. **GitHub Copilot** — subscription or trial required
    (Ctrl+Shift+X → search "GitHub Copilot" → install both Copilot + Copilot Chat)
-4. **Anthropic API key** — needed for Task 4 only:
+3. **Google Chrome** — latest version
+4. **Anthropic API key** — needed for Task 5 only:
    - Create an account at https://console.anthropic.com/
-   - Add credit (minimum $5 — Task 4 uses ~$0.50–1.00)
+   - Add credit (minimum $5 — Task 5 uses ~$0.10–0.30)
    - **Set a spending limit** in the console to avoid surprises
 5. **GitHub account** — for forking the repo
 
@@ -23,14 +22,18 @@ Install **before** the workshop:
 
 ## Running the Project
 
-1. Clone the repo: `git clone <url>`
-2. Open the folder in VS Code
-3. Right-click `index.html` → **"Open with Live Server"**  
-   (or click **"Go Live"** in the bottom-right status bar)
-4. Browser opens at `http://127.0.0.1:5500`
-5. Done ✅
+No `npm install`, no bundler, no Live Server needed. The app runs as a Chrome Extension.
 
-No `npm install`, no bundler, no configuration.
+1. Clone the repo: `git clone <url>`
+2. Open Chrome and go to `chrome://extensions`
+3. Enable **Developer mode** (toggle in the top-right corner)
+4. Click **Load unpacked** and select the project root folder
+5. The Kainos TODO icon appears in the Chrome toolbar — click it to open the popup
+6. Done
+
+**After every code change:** click the refresh icon (↺) on the extension tile in `chrome://extensions`, then reopen the popup.
+
+**Debugging:** right-click the popup → **Inspect** → Console tab.
 
 ---
 
@@ -38,14 +41,19 @@ No `npm install`, no bundler, no configuration.
 
 | File / Folder | Purpose |
 |---|---|
-| `index.html` | Page structure |
-| `app.js` | Application logic |
-| `data/sample-stories.json` | Sample user stories for Task 2 |
+| `manifest.json` | Chrome Extension configuration (Manifest V3) |
+| `popup.html` | Popup UI — structure + all CSS (Kainos theme) |
+| `popup.js` | Application logic — all function stubs for Tasks 1–5 |
+| `options.html` | Settings page — Anthropic API key input |
+| `options.js` | Settings logic — stubs for Task 5 |
+| `icons/` | Extension icons (16, 48, 128 px) |
 | `_NEXT.md` | **Read this first** — tells you what to build on this branch |
-| `TASKS.md` | Full description of all 4 workshop tasks |
+| `TASKS.md` | Full description of all 5 workshop tasks |
 | `CONVENTIONS.md` | Code conventions + working-with-AI tips |
 | `PROMPTS.md` | Prompt library (filled in during the workshop) |
 | `.github/copilot-instructions.md` | AI context file for GitHub Copilot |
+
+> **Icons note:** Generate `icons/icon16.png`, `icons/icon48.png`, and `icons/icon128.png` before loading the extension. Use [favicon.io](https://favicon.io/favicon-generator/) or any icon tool. A reference SVG is provided in `icons/icon.svg`.
 
 ---
 
@@ -55,10 +63,11 @@ See `TASKS.md` for full task descriptions.
 
 | Task | Duration | What you build |
 |---|---|---|
-| Task 1 | ~2h | Dark mode · Nickname · Vote counter |
-| Task 2 | ~2–3h | User stories · Backlog CRUD · Navigation |
-| Task 3 | ~3–4h | Session history · Statistics · Chart |
-| Task 4 | ~3h | AI feature in the app (BYOK pattern) |
+| Task 1 | ~1.5h | Add & display TODOs · `chrome.storage` persistence |
+| Task 2 | ~1.5h | Complete & delete · Empty state · Event delegation |
+| Task 3 | ~1.5h | Filter bar (All / Active / Done) · Task counter |
+| Task 4 | ~2h | Reorder tasks (move up / down) · Keyboard shortcuts |
+| Task 5 | ~2h | AI priority suggestions via Claude API (BYOK) |
 
 ---
 
@@ -68,19 +77,12 @@ Each task has a reference implementation on a dedicated branch:
 
 | Branch | State |
 |---|---|
-| `main` | Starting point — hello world |
+| `main` | Starting point — skeleton with stubs |
 | `task-1-complete` | After Task 1 |
 | `task-2-complete` | After Task 2 |
 | `task-3-complete` | After Task 3 |
-| `task-4-complete` | Final state |
-
-### How to Use Checkpoints
-
-**Standard flow:** start on `main`, read `_NEXT.md`, do Task 1 on your own branch, continue forward. Your code evolves.
-
-**Stuck?** Switch to `task-X-complete`, compare with your code, learn, continue.
-
-**Fell behind?** Switch to the latest complete checkpoint and carry on — you won't be left behind.
+| `task-4-complete` | After Task 4 |
+| `task-5-complete` | Final state |
 
 ### Git Workflow
 
@@ -90,7 +92,7 @@ cat _NEXT.md               # read the brief
 
 git checkout -b my-task-1  # your working branch
 # … code with Copilot …
-git add . && git commit -m "feat: dark mode, nickname, vote counter"
+git add . && git commit -m "feat: add and display todos with chrome.storage"
 
 # Compare with reference:
 git checkout task-1-complete
@@ -104,9 +106,9 @@ cat _NEXT.md               # new brief
 
 ## Technical Requirements
 
-- Browser: Chrome / Firefox / Edge (latest)
-- VS Code with Live Server
-- Internet connection (Tailwind CDN, GitHub Copilot, Anthropic API for Task 4)
+- Browser: **Google Chrome** (required — extension APIs are Chrome-specific)
+- VS Code with GitHub Copilot
+- Internet connection (GitHub Copilot, Anthropic API for Task 5)
 
 ---
 
