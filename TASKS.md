@@ -3,7 +3,7 @@
 
 ## Overview
 
-There are 4 tasks. Each one adds a new feature layer while practising a different AI-assisted coding technique with GitHub Copilot.
+There are 5 tasks. Each one adds a new feature layer while practising a different AI-assisted coding technique with GitHub Copilot.
 
 Read `NEXT.md` at the start of each task — it describes the current state of the app and what to build next.
 
@@ -115,6 +115,43 @@ Run the generated code and test edge cases: all tasks overdue, a mix of dated an
 - [ ] Add a task with no date — no badge, appears last
 - [ ] Sort order is preserved within each filter (All / Active / Done)
 - [ ] All dates survive popup close/reopen
+
+---
+
+## Task 5 — AI Priority Suggestions (~1h) *(bonus — for those with extra time)*
+
+### What to build
+
+- Each task has an **AI** button that calls an external LLM to suggest its priority
+- Priority is one of: **high** (red), **medium** (yellow), **low** (green)
+- While waiting for the AI response, the button shows a loading spinner
+- The suggested priority is saved and survives popup close/reopen
+- The Settings page (⚙) lets the user store their OpenRouter API key securely
+- If no key is set, clicking AI prompts the user to open Settings first
+
+### Setup
+
+1. Go to [openrouter.ai/keys](https://openrouter.ai/keys) and create a free account
+2. Generate an API key (free tier gives access to several free models)
+3. Open the extension's Settings page (⚙ link in the footer) and save your key
+
+### AI-assisted coding focus
+
+This task involves an **async fetch** to an external API with error handling. Ask Copilot to generate `suggestPriority(id)` — then review it critically:
+
+- Does it read the API key from `chrome.storage.local` before every call?
+- Does it disable the button and show a spinner while loading?
+- Does it gracefully handle network errors and malformed JSON responses?
+- Does it use `state.aiLoading` correctly so only one item shows a spinner at a time?
+
+### Self-check
+
+- [ ] Click **AI** on a task — spinner appears while loading
+- [ ] A priority badge (high / medium / low) appears after the response
+- [ ] Click **AI** again — priority can be updated
+- [ ] No API key set → alert prompts user to open Settings
+- [ ] Priority survives popup close/reopen
+- [ ] Network error → user-friendly alert, no crash
 
 ---
 

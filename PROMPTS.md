@@ -80,6 +80,26 @@
 
 ---
 
+## Task 5 — AI Priority Suggestions *(bonus)*
+
+### `setPriority(id, priority)`
+
+> In `popup.js`, implement `setPriority(id, priority)`. Find the todo in `state.todos` where `todo.id === id`. Set its `priority` field to the given value. Then call `saveState()` and `render()`.
+
+### `suggestPriority(id)` — OpenRouter
+
+> In `popup.js`, implement the async function `suggestPriority(id)`. First find the todo by id — return early if not found. Read the API key from `chrome.storage.local` using `API_KEY_STORAGE_KEY`. If no key is stored, call `alert()` telling the user to open Settings and return. Set `state.aiLoading` to the todo's id and call `render()`. Then POST to `OPENROUTER_URL` with headers `Content-Type: application/json` and `Authorization: Bearer <apiKey>`. The request body must be JSON with `model: AI_MODEL`, `max_tokens: 64`, and a single user message asking to rate the priority of the todo text — instruct the model to respond ONLY with valid JSON `{"priority":"high"|"medium"|"low"}`. On success, parse `data.choices[0].message.content` — use a regex to extract the JSON object in case the model adds extra text. If the parsed priority is one of `high`, `medium`, `low`, call `setPriority(id, priority)`. On any error, log it and show an alert. In a `finally` block, set `state.aiLoading` to `false` and call `render()`.
+
+### Add AI button in `renderList()`
+
+> In `popup.js`, inside the `renderList()` template literal, add a `<button class="btn-ai">` between the priority badge and the delete button. The button should be `disabled` when `state.aiLoading === todo.id`. When loading that specific todo, render `<span class="ai-spinner"></span>` as its content; otherwise render the text `AI`.
+
+### `loadApiKey()` and `saveApiKey()` in `options.js`
+
+> In `options.js`, implement `loadApiKey()`. Call `chrome.storage.local.get` with `API_KEY_STORAGE_KEY`. In the callback, set the value of `#api-key-input` to the retrieved key, defaulting to an empty string. Then implement `saveApiKey(key)`. Call `chrome.storage.local.set` with an object keyed by `API_KEY_STORAGE_KEY`. In the callback, set the text of `#save-status` to `'API key saved ✓'` and clear it after 2 seconds using `setTimeout`. Finally, in the form submit listener, call `saveApiKey(key)` with the trimmed input value.
+
+---
+
 ## Participant contributions
 
 *Participants add their best prompts here during the Capstone.*
