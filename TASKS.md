@@ -3,43 +3,29 @@
 
 ## Overview
 
-Each task builds on the previous one. Read `NEXT.md` at the start of each task — it describes the current state of the app and exactly what to build next.
+There are 4 tasks. Each one adds a new feature layer while practising a different AI-assisted coding technique with GitHub Copilot.
 
-All tasks use the same pattern: update `state`, call `saveState()`, call `render()`.
+Read `NEXT.md` at the start of each task — it describes the current state of the app and what to build next.
 
 ---
 
-## Task 1 — Add & Display TODOs (~1.5h)
+## Task 1 — Add Tasks & Save Them (~1.5h)
 
-### What you'll build
+### What to build
 
-- Implement `addTodo(text)` — creates a todo object and pushes it to `state.todos`
-- Implement `loadState()` — reads todos from `chrome.storage.local` on startup
-- Implement `saveState()` — writes `state.todos` to `chrome.storage.local` after every change
-- Implement `renderList()` — generates an `<li>` per todo and injects it into `#todo-list`
-- Wire up the form submit and Enter key in `initHandlers()`
-
-### Todo object shape
-
-```js
-{ id: Date.now(), text: 'Buy milk', done: false, createdAt: new Date().toISOString(), priority: null }
-```
+- Typing a task name and clicking **Add** (or pressing Enter) adds it to the list
+- Tasks survive closing and reopening the popup — they must be persisted between sessions
+- Adding an empty task does nothing
+- When there are no tasks, a friendly empty state message is shown
 
 ### AI-assisted coding focus
 
-**Prompt precision.** The main learning point is how much the quality of Copilot's output depends on prompt specificity.
+Experiment with **prompt precision**. Try asking Copilot the same thing two ways:
 
-Try both:
 - Vague: *"save the todos"*
-- Precise: *"implement loadState() using chrome.storage.local.get with STORAGE_KEY, populate state.todos in the callback, then call render()"*
+- Specific: name the exact function, the storage mechanism, the constant to use, and what should happen in the callback
 
-Compare the results. The precise prompt tells Copilot which API to use, which constant to reference, and what the callback should do — it produces usable code on the first attempt.
-
-### Key concepts
-
-- `chrome.storage.local` is async (callback-based) — unlike `localStorage` which is synchronous
-- The popup closes every time the user clicks away. State must be loaded from storage on every open — memory alone is not enough.
-- Update `.github/copilot-instructions.md` to describe this project's stack so Copilot has context across all files.
+Compare the outputs. Notice how the level of detail determines whether the generated code works on the first attempt.
 
 ### Self-check
 
@@ -47,37 +33,32 @@ Compare the results. The precise prompt tells Copilot which API to use, which co
 - [ ] Close and reopen the popup — the task is still there
 - [ ] Add 3 tasks — all three appear in order
 - [ ] Empty input → Add does nothing
+- [ ] No tasks → friendly empty state is shown
 
 ---
 
-## Task 2 — Complete & Delete (~1.5h)
+## Task 2 — Mark Done & Delete (~1.5h)
 
-### What you'll build
+### What to build
 
-- Implement `toggleTodo(id)` — flips `todo.done`, saves, renders
-- Implement `deleteTodo(id)` — removes the todo from `state.todos`, saves, renders
-- Implement `renderEmptyState()` — shows `#empty-state` when the list is empty
-- Complete `renderList()` — done items get a `done` CSS class (strikethrough + muted colour); each item has a working checkbox and delete button
-- Use **event delegation** in `initHandlers()` for checkbox and delete button clicks
+- Clicking a checkbox marks a task as done with visual strikethrough
+- Clicking the checkbox again un-marks it
+- Each task has a delete button that removes it permanently
+- When all tasks are deleted, the empty state message appears again
 
 ### AI-assisted coding focus
 
-**Reviewing AI output against conventions.** Ask Copilot to generate the full `renderList()` function. Then check:
+Generate the event-handling code with Copilot, then **review it critically**:
 
-- Does it use template literals (as the project convention requires)?
-- Does it reference the correct CSS class names from `popup.html`?
-- Does it use `id`-based lookup to find the right todo, or does it use fragile index-based logic?
+- Does it correctly identify which task was clicked — by unique ID, not by position in the list?
+- Does it attach one listener to the whole list, or separate listeners to each item?
+- Does it call the right functions to save and re-render after every change?
 
-Iterate until the output matches project conventions — don't accept the first suggestion blindly.
-
-### Key concepts
-
-- Event delegation: attach one listener to `#todo-list`, check `event.target` to find the clicked checkbox or button. Attaching listeners inside `renderList()` would add duplicates on every render.
-- Provide the existing `popup.js` snippet as context in Copilot Chat — the generated code should fit the existing `state` shape and call `saveState()` + `render()`.
+Iterate until you're satisfied. Don't accept the first suggestion blindly.
 
 ### Self-check
 
-- [ ] Click a checkbox — task gets strikethrough styling
+- [ ] Click a checkbox — task gets strikethrough
 - [ ] Click again — strikethrough removed
 - [ ] Click delete — task disappears immediately
 - [ ] Delete all tasks — empty state is shown
@@ -85,147 +66,58 @@ Iterate until the output matches project conventions — don't accept the first 
 
 ---
 
-## Task 3 — Filter Bar: All / Active / Done (~1.5h)
+## Task 3 — Filter & Count (~1.5h)
 
-### What you'll build
+### What to build
 
-- Implement `getVisibleTodos()` — returns `state.todos` filtered by `state.filter`
-- Implement `setFilter(filter)` — updates `state.filter`, calls `render()`
-- Implement `renderFilterBar()` — highlights the active filter button with the `active` CSS class
-- Implement `renderStats()` — updates `#stats` with the count of active (not done) todos
-- Update `renderList()` to call `getVisibleTodos()` instead of `state.todos` directly
-- Wire filter button clicks in `initHandlers()`
+- Three filter buttons: **All** / **Active** / **Done** — each shows the relevant subset of tasks
+- The currently active filter button is visually highlighted
+- A counter shows how many active (not done) tasks remain
 
 ### AI-assisted coding focus
 
-**Refactoring existing code with Copilot.** `renderList()` already works — now ask Copilot to update it to use `getVisibleTodos()`.
+You already have a working `renderList()`. Ask Copilot to **refactor** it to respect the active filter — without breaking anything else.
 
-Workflow:
-1. Paste the current `renderList()` into Copilot Chat
-2. Ask: *"Refactor this to call getVisibleTodos() instead of state.todos. getVisibleTodos() filters state.todos by state.filter ('all' | 'active' | 'done'). Don't change any other behaviour."*
-3. Apply the change, then test: filter to Active, delete a task, switch to All — verify counts are correct
-
-Verify that the AI refactor didn't introduce a regression (e.g. deleting while a filter is active must still use `id`-based lookup).
-
-### Key concepts
-
-- **Derived state:** `getVisibleTodos()` is a view of `state.todos`, not a separate copy. Never mutate the filtered result — always mutate `state.todos` and re-derive.
-- The filter choice is not persisted to storage — it resets to `'all'` on popup reopen. That's intentional.
+After applying the change, test it thoroughly: switch filters while adding and deleting tasks and verify the counts stay correct. This is a good exercise in using Copilot for targeted refactoring rather than writing from scratch.
 
 ### Self-check
 
 - [ ] All / Active / Done buttons filter the list correctly
-- [ ] Active count in stats updates as you complete tasks
-- [ ] Adding a task while on the Active filter shows it immediately
+- [ ] Active count updates as you complete tasks
+- [ ] Adding a task while on Active filter shows it immediately
 - [ ] Deleting while on Done filter doesn't affect Active tasks
 
 ---
 
-## Task 4 — Reorder: Move Up / Down (~2h)
+## Task 4 — Due Dates & Urgency (~2h)
 
-### What you'll build
+### What to build
 
-- Add move-up and move-down buttons to each todo item in `renderList()`
-- Implement `moveTodo(id, direction)` — swaps the todo with its neighbour in `state.todos`, saves, renders
-- Disable move-up on the first item and move-down on the last
-- Keyboard shortcut: `Alt+ArrowUp` / `Alt+ArrowDown` on a focused todo item triggers the same move logic
-- **Bonus (fast finishers):** HTML5 drag-and-drop reorder using `dragstart`, `dragover`, `drop` events
-
-### AI-assisted coding focus
-
-**AI as a design advisor.** Before writing any code, open Copilot Chat and ask:
-
-*"What are three different ways to implement drag-and-drop or manual reordering in a vanilla JS list? Compare them by complexity, browser support, and lines of code."*
-
-Read the three options, pick the one that fits the project's no-library constraint, then ask for the implementation. This is the shift from using AI to write code → using AI to think through design.
-
-The drag-and-drop bonus deliberately produces verbose code (drag events have many edge cases). Practise trimming the generated code down to only what's needed — no unused event handlers, no defensive checks for impossible states.
-
-### Key concepts
-
-- Array swap: `[a[i], a[j]] = [a[j], a[i]]` — use this pattern, not splice+splice
-- Reorder applies to `state.todos` (the source of truth), so it works correctly regardless of which filter is active
-- The move buttons should be hidden when a filter is active (filtered view doesn't reflect array order clearly)
-
-### Self-check
-
-- [ ] Move up / down buttons reorder tasks visually
-- [ ] Order persists after popup close/reopen
-- [ ] First item has no move-up, last item has no move-down
-- [ ] `Alt+ArrowUp` / `Alt+ArrowDown` work on a focused item
-
----
-
-## Task 5 — AI Feature: Suggest Priority (~2h)
-
-### What you'll build
-
-In `options.js`:
-- Implement `loadApiKey()` — reads from `chrome.storage.local`, populates `#api-key-input`
-- Implement `saveApiKey(key)` — writes to `chrome.storage.local`, shows "API key saved ✓" in `#save-status` for 2 seconds
-
-In `popup.js`:
-- Add a **"✦ Priority"** button to each active todo item in `renderList()`
-- Implement `suggestPriority(id)`:
-  1. Read the API key from `chrome.storage.local`
-  2. If missing → alert the user to open Settings (⚙ in the footer)
-  3. Set `state.aiLoading = true`, call `render()` (button shows spinner)
-  4. `POST https://api.anthropic.com/v1/messages` with the todo text
-  5. Parse the response → call `setPriority(id, priority)`, save, render
-  6. `state.aiLoading = false`, call `render()`
-- Handle errors: network failure, missing key, malformed JSON response
-
-### Prompt engineering
-
-The system prompt must force Claude to return parseable JSON only:
-
-```
-You are a task prioritisation assistant. 
-Respond with ONLY valid JSON: {"priority": "high" | "medium" | "low"}
-No explanation, no markdown, no other text.
-```
-
-Iterate on this prompt until Claude never adds extra text. Try intentionally vague todo texts ("thing", "meeting") and verify the output is still valid JSON.
-
-### API request shape
-
-```js
-{
-  method: 'POST',
-  headers: {
-    'x-api-key': apiKey,
-    'anthropic-version': '2023-06-01',
-    'content-type': 'application/json',
-  },
-  body: JSON.stringify({
-    model: 'claude-haiku-4-5-20251001',
-    max_tokens: 64,
-    system: '<system prompt above>',
-    messages: [{ role: 'user', content: `Prioritise this task: "${todoText}"` }],
-  }),
-}
-```
+- When adding a task, users can optionally pick a due date
+- Tasks with a past due date get a red **Overdue** indicator
+- Tasks due today get a yellow **Today** indicator
+- Tasks due in the future show their date in a green indicator
+- Tasks without a date show no indicator
+- The list sorts automatically by urgency: overdue → today → upcoming → no date
+- Due dates are saved and survive popup close/reopen
 
 ### AI-assisted coding focus
 
-**Prompt engineering inside code.** The fetch call is straightforward — Copilot can generate it from a single prompt. The real challenge is the system prompt string: it must be precise enough that Claude never returns anything except valid JSON.
+Write the **sorting logic prompt yourself** — no hints given. Your prompt must describe the sort order, how to handle tasks with no date, and whether the original array should be mutated or copied.
 
-Discussion point before Task 5 starts (5 min):
-- The API key lives in `chrome.storage.local` — readable by any extension with `storage` permission
-- In production, the key would be in a backend env variable and the frontend would call your own proxy
-- The BYOK pattern is intentionally insecure here — the insecurity is the lesson
-- The `host_permissions` entry in `manifest.json` is what allows `fetch` to `api.anthropic.com` — Manifest V3 CSP blocks external fetches without it
+Run the generated code and test edge cases: all tasks overdue, a mix of dated and undated, tasks with the same due date. Iterate until it's correct. The challenge is writing a precise enough prompt that the sort works on the first real test.
 
 ### Self-check
 
-- [ ] Open Settings (⚙), enter API key, click Save — "saved ✓" appears
-- [ ] Click "✦ Priority" on a todo — spinner appears, then a coloured badge (High / Medium / Low)
-- [ ] Badge persists after popup close/reopen
-- [ ] No API key → helpful error message, not a crash
-- [ ] Network error → error message shown, spinner disappears
+- [ ] Add a task with a past date — red "Overdue" badge, appears first in the list
+- [ ] Add a task for today — yellow "Today" badge, appears after overdue
+- [ ] Add a task with a future date — date badge, appears after today
+- [ ] Add a task with no date — no badge, appears last
+- [ ] Sort order is preserved within each filter (All / Active / Done)
+- [ ] All dates survive popup close/reopen
 
 ---
 
 ## Capstone (~30 min)
 
-Demo your extension to the group. Show one AI interaction that worked particularly well — share the prompt in `PROMPTS.md` so everyone can learn from it.
+Demo your extension to the group. Share one Copilot prompt that worked particularly well — add it to `PROMPTS.md` so everyone can learn from it.
