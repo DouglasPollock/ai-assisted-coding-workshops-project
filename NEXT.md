@@ -1,53 +1,29 @@
-# Next Step: Task 1 — Add & Display Tasks
+# AI-Assisted Coding Workshop
 
-## Where You Are
+## What This Is
 
-Fresh start. The extension loads with a hard-coded list of sample tasks in `popup.js` so you can see the UI.
-The `addTodo`, `loadState`, and `saveState` functions are stubs — nothing persists yet.
+A hands-on workshop where you build a **Chrome Extension Task List** from scratch using **GitHub Copilot**. You'll practise writing effective prompts, reviewing AI-generated code, and iterating until it works — across 5 progressive tasks.
 
-## What You'll Build
+By the end, you'll have a fully functional Chrome extension with persistence, filtering, due dates, and AI-powered priority suggestions.
 
-Three features, one at a time:
+## Tasks Overview
 
-1. **Add a task** — wire up the form so typing text and clicking Add creates a new todo item
-2. **Persist tasks** — implement `loadState()` and `saveState()` using `chrome.storage.local`
-3. **Render the list** — implement `renderList()` to display each todo as an `<li>`
+| Task | What You'll Build |
+|---|---|
+| **Task 1** — Add & Save | Wire up the form, persist tasks with `chrome.storage.local` |
+| **Task 2** — Done & Delete | Checkbox toggle, delete button, event delegation |
+| **Task 3** — Filter & Count | All / Active / Done filter buttons, active task counter |
+| **Task 4** — Due Dates | Date picker, overdue/today/upcoming badges, urgency sorting |
+| **Task 5** — AI Priority | Call OpenRouter API to suggest task priority (high/medium/low) |
 
-By the end, tasks survive popup close and reopen.
+## How to Start
 
-## Learning Objectives
+1. Switch to the `task-1` branch: `git checkout task-1`
+2. Read `NEXT.md` on that branch — it describes what to build
+3. Open Copilot Chat and start coding
+4. When done, move to `task-2` for the next challenge
 
-- Writing precise prompts in a real project context
-- Configuring GitHub Copilot with `.github/copilot-instructions.md`
-- Iterating on AI-generated code
-- Recognising how prompt specificity affects output quality
-
-## Suggested Steps
-
-1. Open Chrome and load the extension unpacked from the project root (`chrome://extensions` → Developer mode → Load unpacked)
-2. Click the extension icon — verify the popup opens and shows the sample tasks
-3. Read `CONVENTIONS.md` — especially the "Working with GitHub Copilot" section
-4. Read `.github/copilot-instructions.md` to see what context Copilot has, then update it to describe the actual project stack
-5. Implement **`addTodo(text)`** first — create the todo object and push it to `state.todos`
-6. Wire up the form submit in `initHandlers()` to call `addTodo`
-7. Implement **`saveState()`** using `chrome.storage.local.set`
-8. Implement **`loadState()`** using `chrome.storage.local.get` — replace the hard-coded todos
-9. After each step — reload the extension and verify it works before moving on
-
-## Prompting Tips
-
-Try three levels of specificity across the three features and notice how the results differ:
-
-- **`addTodo`** — very specific prompt (see the example in `PROMPTS.md`)
-- **`saveState`** — medium specificity: _"Save state.todos to chrome.storage.local using STORAGE_KEY"_
-- **`loadState`** — open: _"I want tasks to survive popup close"_
-
-## Self-Check
-
-Before moving on, verify:
-- [ ] Type a task and click Add — it appears in the list
-- [ ] Close and reopen the popup — the task is still there
-- [ ] Add 3 tasks — all three appear in order
+> **Stuck?** Each task branch (e.g. `task-2`) contains the completed code from all previous tasks. Use it as a checkpoint to catch up and keep going.
 - [ ] Empty input → Add does nothing
 - [ ] You can explain at least one decision Copilot made that you would have done differently
 
