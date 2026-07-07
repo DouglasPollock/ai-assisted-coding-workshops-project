@@ -1,9 +1,9 @@
+---
+name: pr-creation
+description: A skill that helps users create pull requests (PRs) or merge requests (MRs) with a specific title format. It ensures that the title includes a Jira reference and follows the required structure. Use this skill to ensure every pull request and merge request title follows this format: `type/DLSR-xxxx-short-description`
+---
+
 # PR Creation Skill
-
-description:
-Use this skill to ensure every pull request and merge request title follows this format:
-
-`type/DLSR-xxxx-short-description`
 
 Rules:
 
